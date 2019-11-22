@@ -1,0 +1,2 @@
+pip uninstall playable
+pip install .
