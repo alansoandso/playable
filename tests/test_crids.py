@@ -4,18 +4,14 @@ from tool.assets import Assets
 
 @patch('builtins.open',
        mock_open(read_data='{"default":{"first": "crid1","second":"crid2"}}'))
-
 def test_load_crids():
-    assert Assets.load_users() == {"moviesonly": {"profileId": "15706100", "username": "nowtvAutomation"}}
+    assert Assets.load_crids() == {"first": "crid1", "second": "crid2"}
     # noinspection PyUnresolvedReferences
     open.assert_called_once()
 
 
-def test_profileid_from_user():
+@patch('builtins.open',
+       mock_open(read_data='{"default":{"first": "crid1", "second": "crid2"}}'))
+def test_get_crid_defaults():
     quality = Assets()
-    assert quality.get_profileid('moviesonly') == '15706100'
-
-
-def test_get_profileid_defaults():
-    quality = Assets()
-    assert quality.get_profileid('1234') == '1234'
+    assert quality.get_crid('unknown') == ''

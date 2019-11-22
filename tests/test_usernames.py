@@ -1,5 +1,5 @@
 from unittest.mock import patch, mock_open
-from user.usernames import Usernames
+from tool.usernames import Usernames
 
 
 @patch('builtins.open',

@@ -1,38 +1,31 @@
 import json
-from user.utils import pformat
 
 
-class Usernames(object):
-    users = None
+class Assets(object):
+    crids = None
 
     def __init__(self):
         # Only load in the file once
-        if not Usernames.users:
-            Usernames.users = self.load_users()
+        if not Assets.crids:
+            Assets.crids = self.load_crids()
 
     @staticmethod
-    def load_users():
+    def load_crids():
+        crids_path = '/Users/alan/workspace/popcorn-qa-cucumber-jvm/src/test/resources/environment/crid.json'
         try:
-            users_path = '/Users/alan/workspace/popcorn-qa-cucumber-jvm/src/test/resources/environment/users.json'
-            # Load all QA users
-            with open(users_path) as json_data:
-                return json.load(json_data).get('quality')
+            # Load all QA crids
+            with open(crids_path) as json_data:
+                return json.load(json_data).get('default')
         except json.decoder.JSONDecodeError as error:
-            print(f'Error on loading JSON from: {users_path}')
+            print(f'Error on loading JSON from: {crids_path}')
             raise error
 
     @staticmethod
-    def list_usernames():
-        for username in Usernames.users.keys():
-            print(username)
-        print(f'\nFound {len(Usernames.users)} available users')
+    def list_titles():
+        for title in Assets.crids.keys():
+            print(title)
+        print(f'\nFound {len(Assets.crids)} available assets')
 
     @staticmethod
-    def get_profileid(user):
-        user_details = Usernames.users.get(user, '')
-        if not user_details:
-            user_details = {'profileId': user}
-        details = 'User details:\n'
-        details += pformat(user_details)
-        print(details)
-        return user_details.get('profileId', '')
+    def get_crid(title):
+        return Assets.crids.get(title, '')
