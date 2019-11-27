@@ -6,6 +6,8 @@ import sys
 
 from tool.usernames import Usernames
 from tool.assets import Assets
+from tool.playout import play
+
 users = Usernames()
 assets = Assets()
 
@@ -38,10 +40,11 @@ def command_line_runner(argv=None):
     if args.asset:
         # asset can be a crid or a title
         crid = assets.get_crid(' '.join(args.asset))
+        x = ' '.join(args.asset)
+        print(f'Looking for >{x}<')
         if not crid:
             crid = args.asset[0]
-        print(crid)
-        return crid
+        return play(crid)
 
 
 if __name__ == '__main__':

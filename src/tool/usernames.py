@@ -11,9 +11,13 @@ class Usernames(object):
             Usernames.users = self.load_users()
 
     @staticmethod
+    def get(user):
+        return Usernames.users.get(user, '')
+
+    @staticmethod
     def load_users():
+        users_path = '/Users/alan/workspace/popcorn-qa-cucumber-jvm/src/test/resources/environment/users.json'
         try:
-            users_path = '/Users/alan/workspace/popcorn-qa-cucumber-jvm/src/test/resources/environment/users.json'
             # Load all QA users
             with open(users_path) as json_data:
                 return json.load(json_data).get('quality')

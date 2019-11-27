@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+
+import os
+import shutil
+
+home = os.environ.get('HOME')
+zsh_cfg = os.path.join(home, '.oh-my-zsh')
+
+if os.path.exists(zsh_cfg):
+    completion_path = os.path.join(zsh_cfg, 'custom/plugins/playable')
+    if not os.path.exists(completion_path):
+        os.mkdir(completion_path)
+        print(f'mkdir {completion_path}')
+
+    completion_cfg_path = os.path.join(completion_path, 'playable.plugin.zsh')
+    if not os.path.exists(completion_cfg_path):
+        shutil.copy('playable.plugin.zsh', completion_cfg_path)
+        print(f'copy playable.plugin.zsh to {completion_cfg_path}')
+
+print()
+print('Please update {home}/.zshrc plugins to finish')
+

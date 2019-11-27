@@ -32,10 +32,20 @@ def test_clr_list_users(mock_list_crids):
 
 
 @patch('tool.playable.assets.get_crid')
-def test_clr_play_title(mock_get_crid):
+@patch('tool.playable.play')
+def test_clr_play_title(mock_play, mock_get_crid):
     playable.command_line_runner('playable movies only'.split())
     mock_get_crid.assert_called_once()
+    mock_play.assert_called_once()
 
 
-def test_clr_play_long_title():
+@patch('tool.playable.play')
+def test_clr_play_title_2_crid(mock_play):
     playable.command_line_runner('playable The Firm'.split())
+    mock_play.assert_called_with('3e1589785251a510VgnVCM1000000b43150a____')
+
+
+@patch('tool.playable.play')
+def test_clr_play_crid(mock_play):
+    playable.command_line_runner('playable crid is not in list'.split())
+    mock_play.assert_called_with('crid')

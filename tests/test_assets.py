@@ -15,3 +15,8 @@ def test_load_crids():
 def test_get_crid_defaults():
     quality = Assets()
     assert quality.get_crid('unknown') == ''
+
+
+def test_get_crid():
+    quality = Assets()
+    assert quality.get_crid('The Firm')
