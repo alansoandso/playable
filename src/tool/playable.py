@@ -6,18 +6,22 @@ import sys
 
 from tool.usernames import Usernames
 from tool.assets import Assets
-from tool.playout import play
+from tool.playout import play, catalogue_movies
+from tool.verbose import Verbose
 
 users = Usernames()
 assets = Assets()
+verbose = Verbose()
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(description='Playout tool')
+    parser.add_argument('--catalogue_movies', action='store_true', default=False, help='Find playable movies in the catalogue')
     parser.add_argument('-l', '--list_crids', action='store_true', default=False, help='List all QA crids')
-    parser.add_argument('asset', action="store", nargs='*', help='title or crid')
+    parser.add_argument('-v', '--verbose', action='store_true', default=False, help='verbose')
+    parser.add_argument('asset', action="store", nargs='*', help='Playout title|crid')
 
     if len(argv) == 1:
         parser.print_usage()
@@ -32,11 +36,20 @@ def command_line_runner(argv=None):
 
     args = parse_args(argv)
 
+    if args.verbose:
+        verbose.set()
+
     # List all QA crids
     if args.list_crids:
         assets.list_titles()
         return
 
+    # Find playable movies in the catalogue
+    if args.catalogue_movies:
+        catalogue_movies()
+        return
+
+    # Playout title|crid
     if args.asset:
         # asset can be a crid or a title
         crid = assets.get_crid(' '.join(args.asset))

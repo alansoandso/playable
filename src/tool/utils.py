@@ -1,6 +1,30 @@
 import requests
 import json
 from pretty_json import format_json
+from tool.verbose import Verbose
+
+
+class AsJson(dict):
+    """
+    Traverse through the JSON
+    """
+    def getString(self, path, default=""):
+        keys = path.split(".")
+        val = None
+
+        for key in keys:
+            if val:
+                if isinstance(val, list):
+                    val = [v.get(key, default) if v else None for v in val]
+                else:
+                    val = val.get(key, default)
+            else:
+                val = dict.get(self, key, default)
+
+            if not val:
+                break
+
+        return val
 
 
 def pprint(json):
@@ -36,5 +60,6 @@ def in_atom(crid):
     if response.status_code == 200:
         return True
 
-    print(f'Atom lookup request: {url}\nReturned: {response.status_code}')
+    Verbose().output(f'Atom lookup request: {url}\nReturned: {response.status_code}')
+
     return False
