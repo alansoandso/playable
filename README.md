@@ -49,14 +49,22 @@ py.test -vs
 **zsh Completion**
 
 ```
-Add script to .oh-my-zsh/custom/plugins
+# Add script to .oh-my-zsh/custom/plugins with:
+cd scripts
+./setup_completions
+
+# Update .zshrc with:
+plugins=(
+  playable
+)
 ```
 
 **Testing**
+
 ```
 cd tests
 py.test -v
-
+# OR:
 py.test --cov-report html --cov tool.playable
 open htmlcov/index.html
 ```

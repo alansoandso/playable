@@ -1,5 +1,3 @@
-compctl -K _playable playable
-
 _playable() {
   local completions
 
@@ -7,3 +5,7 @@ _playable() {
 
   reply=(${(ps:\n:)completions})
 }
+
+# 1. If '--' then return choice between (verbose catalogue_movies)
+# 2. Complete with _playable
+compctl -K _playable -x 's[--]' -k '(verbose catalogue_movies)' -- playable
