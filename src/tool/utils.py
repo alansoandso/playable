@@ -35,6 +35,11 @@ def pformat(json):
     return format_json(json, 'solarized')
 
 
+def highlight(string):
+    """ Highlight error strings with white on blue """
+    return "\033[01;44m" + string + "\033[01;0m"
+
+
 def session(user):
     url = "http://services.quality.nowtv.bskyb.com/sessions"
     payload = json.dumps({'username': user.get('email', user.get('username')), 'password': user['password']})

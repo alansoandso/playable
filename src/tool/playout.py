@@ -1,8 +1,8 @@
 import requests
-from pprint import pprint
+from pprint import pformat
 from tool.verbose import Verbose
 from tool.usernames import Usernames
-from tool.utils import session, in_atom, AsJson
+from tool.utils import session, in_atom, AsJson, highlight
 
 
 def get_umv():
@@ -15,7 +15,7 @@ def get_umv():
 
 def play(crid):
     if in_atom(crid):
-        playout(get_umv(), crid)
+        return playout(get_umv(), crid)
 
 
 def playout(umv, crid):
@@ -26,7 +26,7 @@ def playout(umv, crid):
     response = requests.get(url, headers=headers, timeout=5)
 
     if response.status_code == 200:
-        Verbose().output(response.json())
+        Verbose().output(pformat(response.json()))
         return True
     Verbose().output(f'{response.status_code}: {response.json()}')
     return False
@@ -69,8 +69,51 @@ def enddate(details):
 
     if not end_date:
         end_date = AsJson(details).getString("show.episodes.count")
-    
+
     if not end_date:
         end_date = AsJson(details).getString("message", "N/A")
-    
+
     return end_date
+
+
+def catalogue_collections(env='qa'):
+    if env == 'qa':
+        url = "http://client.quality.nowtv.bskyb.com/catalogue/collections?kidsAware=true"
+
+    elif env == 'integration':
+        url = "http://client.integration.nowtv.bskyb.com/catalogue/collections?kidsAware=true"
+
+    elif env == 'production':
+        url = "http://client.nowtv.com/catalogue/collections?kidsAware=true"
+
+    headers = {'cache-control': "no-cache"}
+    response = requests.request("GET", url, headers=headers)
+
+    if response.status_code == 200:
+        print("Got a catalogue of {} bytes".format(len(response.text)))
+        catalogue = response.json()
+        # pprint(catalogue)
+        # return
+    else:
+        print("No data")
+        return
+
+    # Extract the collection urls from the collections
+    collections = catalogue.get("list", [])
+    total = 0
+
+    for collection in collections:
+        uri = AsJson(collection).getString("programs.uri", "")
+        if not uri:
+            uri = AsJson(collection).getString("episodes.uri", "")
+        if not uri:
+            uri = AsJson(collection).getString("shows.uri", "")
+        if uri:
+            response = requests.request("GET", uri, headers=headers)
+            if response.status_code == 200:
+                total += 1
+                print(uri)
+            else:
+                print(highlight(uri))
+
+    print(f'\nFound: {total} out of {len(collections)}')

@@ -6,7 +6,7 @@ import sys
 
 from tool.usernames import Usernames
 from tool.assets import Assets
-from tool.playout import play, catalogue_movies
+from tool.playout import play, catalogue_movies, catalogue_collections
 from tool.verbose import Verbose
 
 users = Usernames()
@@ -18,7 +18,9 @@ logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(description='Playout tool')
-    parser.add_argument('--catalogue_movies', action='store_true', default=False, help='Find playable movies in the catalogue')
+    parser.add_argument('--collections', action='store_true', default=False, help='Find collections in the catalogue')
+    parser.add_argument('--movies', action='store_true', default=False, help='Find playable movies in the catalogue')
+    parser.add_argument('--env', action='store', default='qa', help='Override environment with (integration or production)')
     parser.add_argument('-l', '--list_crids', action='store_true', default=False, help='List all QA crids')
     parser.add_argument('-v', '--verbose', action='store_true', default=False, help='verbose')
     parser.add_argument('asset', action="store", nargs='*', help='Playout title|crid')
@@ -44,8 +46,13 @@ def command_line_runner(argv=None):
         assets.list_titles()
         return
 
+    # Find collections in the catalogue
+    if args.collections:
+        catalogue_collections(args.env)
+        return
+
     # Find playable movies in the catalogue
-    if args.catalogue_movies:
+    if args.movies:
         catalogue_movies()
         return
 
@@ -54,10 +61,14 @@ def command_line_runner(argv=None):
         # asset can be a crid or a title
         crid = assets.get_crid(' '.join(args.asset))
         x = ' '.join(args.asset)
-        print(f'Looking for >{x}<')
+        print(f'Looking for: {x}')
+
         if not crid:
             crid = args.asset[0]
-        return play(crid)
+
+        print(f'Using: {crid}')
+        if play(crid):
+            print('OK')
 
 
 if __name__ == '__main__':
