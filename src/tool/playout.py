@@ -32,7 +32,7 @@ def playout(umv, crid):
     return False
 
 
-def catalogue_movies():
+def catalogue_movies(certificate=''):
     url = 'http://client.quality.nowtv.bskyb.com/catalogue/programs?limit=20&offset='
     umv = get_umv()
 
@@ -51,8 +51,10 @@ def catalogue_movies():
             for content in catalogue['list']:
                 crid = content.get('id', 'n/a')
                 title = AsJson(content).getString("title", "n/a")
-                if in_atom(crid) and playout(umv, crid):
-                    print(f"{content.get('certificate', ''):<3} {title:<50} {crid:<15} {content.get('uri', 'n/a'):<120} Ends: {enddate(content)}")
+                # matching cert or no cert filter
+                if certificate and content.get('certificate', 'x') == certificate or not certificate:
+                    if in_atom(crid) and playout(umv, crid):
+                        print(f"{content.get('certificate', ''):<3} {title:<50} {crid:<15} {content.get('uri', 'n/a'):<120} Ends: {enddate(content)}")
         else:
             print('No data')
             return
@@ -77,10 +79,9 @@ def enddate(details):
 
 
 def catalogue_collections(env='qa'):
-    if env == 'qa':
-        url = "http://client.quality.nowtv.bskyb.com/catalogue/collections?kidsAware=true"
+    url = "http://client.quality.nowtv.bskyb.com/catalogue/collections?kidsAware=true"
 
-    elif env == 'integration':
+    if env == 'integration':
         url = "http://client.integration.nowtv.bskyb.com/catalogue/collections?kidsAware=true"
 
     elif env == 'production':
