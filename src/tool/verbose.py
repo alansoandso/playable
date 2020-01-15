@@ -12,7 +12,7 @@ class Verbose(object):
 
     def output(self, string, **kwargs):
         if Verbose.__state:
-            print(string, kwargs)
+            print(string, **kwargs)
 
 
 if __name__ == '__main__':

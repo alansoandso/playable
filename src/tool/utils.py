@@ -8,7 +8,8 @@ class AsJson(dict):
     """
     Traverse through the JSON
     """
-    def getString(self, path, default=""):
+
+    def get(self, path, default=""):
         keys = path.split(".")
         val = None
 
@@ -27,12 +28,12 @@ class AsJson(dict):
         return val
 
 
-def pprint(json):
-    print(pformat(json))
+def pprint(output):
+    print(pformat(output))
 
 
-def pformat(json):
-    return format_json(json, 'solarized')
+def pformat(output):
+    return format_json(output, 'solarized')
 
 
 def highlight(string):
@@ -62,9 +63,8 @@ def in_atom(crid):
     headers = {'x-skyott-proposition': "NOWTV", 'x-skyott-territory': "GB", 'x-skyott-device': "MOBILE", 'x-skyott-platform': "IOS", 'cache-control': "no-cache"}
 
     response = requests.get(url, headers=headers, timeout=5)
+    Verbose().output(f'Atom lookup request: {url}\nReturned: {response.status_code}')
     if response.status_code == 200:
         return True
-
-    Verbose().output(f'Atom lookup request: {url}\nReturned: {response.status_code}')
 
     return False

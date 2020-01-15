@@ -20,8 +20,8 @@ def parse_args(argv):
     parser = argparse.ArgumentParser(description='Playout tool')
     parser.add_argument('--collections', action='store_true', default=False, help='Find collections in the catalogue')
     parser.add_argument('--movies', action='store_true', default=False, help='Find playable movies in the catalogue')
-    parser.add_argument('--with_cert', action='store', default='', help='Filter on cerrtificate')
-    parser.add_argument('--env', action='store', default='qa', help='Override environment with (integration or production)')
+    parser.add_argument('--with_cert', action='store', default='', help='Filter on certificate')
+    parser.add_argument('--env', action='store', default='quality', help='Set for (integration or production)')
     parser.add_argument('-l', '--list_crids', action='store_true', default=False, help='List all QA crids')
     parser.add_argument('-v', '--verbose', action='store_true', default=False, help='verbose')
     parser.add_argument('asset', action="store", nargs='*', help='Playout title|crid')
@@ -68,7 +68,7 @@ def command_line_runner(argv=None):
             crid = args.asset[0]
 
         print(f'Using: {crid}')
-        if play(crid):
+        if play(crid, args.env):
             print('OK')
 
 

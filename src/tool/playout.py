@@ -13,16 +13,20 @@ def get_umv():
     return umv
 
 
-def play(crid):
+def play(crid, env='quality'):
     if in_atom(crid):
-        return playout(get_umv(), crid)
+        return playout(get_umv(), crid, env)
 
 
-def playout(umv, crid):
+def playout(umv, crid, env='quality'):
     url = 'http://playout.quality.nowtv.bskyb.com/vod/' + crid
+
+    if env == 'integration':
+        url = 'http://playout.integration.nowtv.bskyb.com/vod/' + crid
+
     headers = {'authorization': umv, 'X-NowTV-DeviceID': 'playps3 NowTV_Player;1;PS3;Win32', 'X-NowTV-ClientID': 'ps3 client crosstv:1.5.1', }
 
-    Verbose().output('Request: {}'.format(url))
+    Verbose().output(f'Request: {url}')
     response = requests.get(url, headers=headers, timeout=5)
 
     if response.status_code == 200:
@@ -50,35 +54,35 @@ def catalogue_movies(certificate=''):
 
             for content in catalogue['list']:
                 crid = content.get('id', 'n/a')
-                title = AsJson(content).getString("title", "n/a")
+                title = AsJson(content).get("title", "n/a")
                 # matching cert or no cert filter
                 if certificate and content.get('certificate', 'x') == certificate or not certificate:
                     if in_atom(crid) and playout(umv, crid):
-                        print(f"{content.get('certificate', ''):<3} {title:<50} {crid:<15} {content.get('uri', 'n/a'):<120} Ends: {enddate(content)}")
+                        print(f"{content.get('certificate', ''):<3} {title:<50} {crid:<15} {content.get('uri', 'n/a'):<120} Ends: {end_date(content)}")
         else:
             print('No data')
             return
 
 
-def enddate(details):
-    end_date = AsJson(details).getString("episode.availabilities.list.end")
+def end_date(details):
+    end = AsJson(details).get("episode.availabilities.list.end")
 
-    if not end_date:
-        end_date = AsJson(details).getString("program.availabilities.list.end")
+    if not end:
+        end = AsJson(details).get("program.availabilities.list.end")
 
-    if not end_date:
-        end_date = AsJson(details).getString("availabilities.list.end")[0]
+    if not end:
+        end = AsJson(details).get("availabilities.list.end")[0]
 
-    if not end_date:
-        end_date = AsJson(details).getString("show.episodes.count")
+    if not end:
+        end = AsJson(details).get("show.episodes.count")
 
-    if not end_date:
-        end_date = AsJson(details).getString("message", "N/A")
+    if not end:
+        end = AsJson(details).get("message", "N/A")
 
-    return end_date
+    return end
 
 
-def catalogue_collections(env='qa'):
+def catalogue_collections(env='quality'):
     url = "http://client.quality.nowtv.bskyb.com/catalogue/collections?kidsAware=true"
 
     if env == 'integration':
@@ -104,11 +108,11 @@ def catalogue_collections(env='qa'):
     total = 0
 
     for collection in collections:
-        uri = AsJson(collection).getString("programs.uri", "")
+        uri = AsJson(collection).get("programs.uri", "")
         if not uri:
-            uri = AsJson(collection).getString("episodes.uri", "")
+            uri = AsJson(collection).get("episodes.uri", "")
         if not uri:
-            uri = AsJson(collection).getString("shows.uri", "")
+            uri = AsJson(collection).get("shows.uri", "")
         if uri:
             response = requests.request("GET", uri, headers=headers)
             if response.status_code == 200:
