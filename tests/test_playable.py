@@ -1,27 +1,24 @@
-from unittest.mock import call, patch, mock_open
-
-import pytest
+import sys
+from unittest.mock import patch
 
 from tool import playable
 
 
-@patch('builtins.open', mock_open(read_data='{"default":{"first": "crid1","second":"crid2"}}'))
-@patch('argparse.ArgumentParser')
-def test_parser_print_usage(mock_parser):
-    with pytest.raises(SystemExit) as pytest_wrapped_e:
-        playable.parse_args(['playable'])
-    assert pytest_wrapped_e.type == SystemExit
-    assert pytest_wrapped_e.value.code == 1
-    mock_parser.assert_has_calls([call().print_usage()])
+def test_cli_usage(monkeypatch, capsys):
+    """Test if command_line_runner shows help when called without parameters."""
+    monkeypatch.setattr(sys, "argv", ["playable"])
+    playable.command_line_runner()
+    out, err = capsys.readouterr()
+    assert 'usage: playable [-h]' in out
 
 
 def test_parser_a_title():
-    args = playable.parse_args('playable title'.split())
+    args = playable.get_parser().parse_args('title'.split())
     assert args.asset == ['title']
 
 
 def test_parser_long_title():
-    args = playable.parse_args('playable some title'.split())
+    args = playable.get_parser().parse_args('some title'.split())
     assert args.asset == ['some', 'title']
 
 
@@ -42,10 +39,18 @@ def test_clr_play_title(mock_play, mock_get_crid):
 @patch('tool.playable.play')
 def test_clr_play_title_2_crid(mock_play):
     playable.command_line_runner('playable The Firm'.split())
-    mock_play.assert_called_with('3e1589785251a510VgnVCM1000000b43150a____')
+    mock_play.assert_called_with('3e1589785251a510VgnVCM1000000b43150a____', env='quality')
 
 
 @patch('tool.playable.play')
 def test_clr_play_crid(mock_play):
     playable.command_line_runner('playable crid is not in list'.split())
-    mock_play.assert_called_with('crid')
+    mock_play.assert_called_with('crid', env='quality')
+
+
+@patch('tool.playable.play')
+def test_clr_play_in_integration_title_2_crid(mock_play):
+    playable.command_line_runner('playable --env integration The Firm'.split())
+    mock_play.assert_called_with('3e1589785251a510VgnVCM1000000b43150a____', env='integration')
+
+

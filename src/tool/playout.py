@@ -19,11 +19,7 @@ def play(crid, env='quality'):
 
 
 def playout(umv, crid, env='quality'):
-    url = 'http://playout.quality.nowtv.bskyb.com/vod/' + crid
-
-    if env == 'integration':
-        url = 'http://playout.integration.nowtv.bskyb.com/vod/' + crid
-
+    url = f'http://playout.{env}.nowtv.bskyb.com/vod/{crid}'
     headers = {'authorization': umv, 'X-NowTV-DeviceID': 'playps3 NowTV_Player;1;PS3;Win32', 'X-NowTV-ClientID': 'ps3 client crosstv:1.5.1', }
 
     Verbose().output(f'Request: {url}')
@@ -36,8 +32,8 @@ def playout(umv, crid, env='quality'):
     return False
 
 
-def catalogue_movies(certificate=''):
-    url = 'http://client.quality.nowtv.bskyb.com/catalogue/programs?limit=20&offset='
+def catalogue_movies(certificate='', env='quality'):
+    url = f'http://client.{env}.nowtv.bskyb.com/catalogue/programs?limit=20&offset='
     umv = get_umv()
 
     headers = {'cache-control': 'no-cache'}
@@ -57,7 +53,7 @@ def catalogue_movies(certificate=''):
                 title = AsJson(content).get("title", "n/a")
                 # matching cert or no cert filter
                 if certificate and content.get('certificate', 'x') == certificate or not certificate:
-                    if in_atom(crid) and playout(umv, crid):
+                    if in_atom(crid) and playout(umv, crid, env):
                         print(f"{content.get('certificate', ''):<3} {title:<50} {crid:<15} {content.get('uri', 'n/a'):<120} Ends: {end_date(content)}")
         else:
             print('No data')
@@ -83,12 +79,8 @@ def end_date(details):
 
 
 def catalogue_collections(env='quality'):
-    url = "http://client.quality.nowtv.bskyb.com/catalogue/collections?kidsAware=true"
-
-    if env == 'integration':
-        url = "http://client.integration.nowtv.bskyb.com/catalogue/collections?kidsAware=true"
-
-    elif env == 'production':
+    url = f'http://client.{env}.nowtv.bskyb.com/catalogue/collections?kidsAware=true'
+    if env == 'production':
         url = "http://client.nowtv.com/catalogue/collections?kidsAware=true"
 
     headers = {'cache-control': "no-cache"}

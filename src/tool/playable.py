@@ -16,7 +16,7 @@ verbose = Verbose()
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 
-def parse_args(argv):
+def get_parser():
     parser = argparse.ArgumentParser(description='Playout tool')
     parser.add_argument('--collections', action='store_true', default=False, help='Find collections in the catalogue')
     parser.add_argument('--movies', action='store_true', default=False, help='Find playable movies in the catalogue')
@@ -26,18 +26,19 @@ def parse_args(argv):
     parser.add_argument('-v', '--verbose', action='store_true', default=False, help='verbose')
     parser.add_argument('asset', action="store", nargs='*', help='Playout title|crid')
 
-    if len(argv) == 1:
-        parser.print_usage()
-        exit(1)
-    else:
-        return parser.parse_args(argv[1:])
+    return parser
 
 
 def command_line_runner(argv=None):
+    parser = get_parser()
     if argv is None:
         argv = sys.argv
 
-    args = parse_args(argv)
+    if len(argv) == 1:
+        parser.print_usage()
+        return
+
+    args = parser.parse_args(argv[1:])
 
     if args.verbose:
         Verbose().set()
@@ -54,7 +55,7 @@ def command_line_runner(argv=None):
 
     # Find playable movies in the catalogue
     if args.movies:
-        catalogue_movies(certificate=args.with_cert)
+        catalogue_movies(certificate=args.with_cert, env=args.env)
         return
 
     # Playout title|crid
@@ -68,8 +69,11 @@ def command_line_runner(argv=None):
             crid = args.asset[0]
 
         print(f'Using: {crid}')
-        if play(crid, args.env):
+        if play(crid, env=args.env):
             print('OK')
+            return
+        else:
+            return 1
 
 
 if __name__ == '__main__':
