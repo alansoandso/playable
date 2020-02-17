@@ -1,12 +1,13 @@
 import sys
 from unittest.mock import patch
-
 from tool import playable
 
 
-def test_cli_usage(monkeypatch, capsys):
+@patch('sys.argv', ['playable'])
+def test_cli_usage(capsys):
     """Test if command_line_runner shows help when called without parameters."""
-    monkeypatch.setattr(sys, "argv", ["playable"])
+    # def test_cli_usage(monkeypatch, capsys):
+    # monkeypatch.setattr(sys, "argv", ["playable"])
     playable.command_line_runner()
     out, err = capsys.readouterr()
     assert 'usage: playable [-h]' in out

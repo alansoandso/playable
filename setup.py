@@ -6,12 +6,11 @@ from setuptools import find_packages
 from setuptools import setup
 
 install_requires = [
-      'pytest',
       'pretty-json',
       'Pygments',
       'pygments-json',
       'pygments-solarized',
-      'pytest-cov'
+      'requests'
 ]
 
 setup(name='playable',
