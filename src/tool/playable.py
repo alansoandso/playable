@@ -23,7 +23,7 @@ def get_parser():
     parser.add_argument('--with_cert', action='store', default='', help='Filter on certificate')
     parser.add_argument('--env', action='store', default='quality', help='Set for (integration or production)')
     parser.add_argument('-l', '--list_crids', action='store_true', default=False, help='List all QA crids')
-    parser.add_argument('-v', '--verbose', action='store_true', default=False, help='verbose')
+    parser.add_argument('-v', '--verbose', action='store', default=0, type=int, help='Verbosity level of output')
     parser.add_argument('asset', action="store", nargs='*', help='Playout title|crid')
 
     return parser
@@ -41,7 +41,7 @@ def command_line_runner(argv=None):
     args = parser.parse_args(argv[1:])
 
     if args.verbose:
-        Verbose().set()
+        Verbose().set(level=args.verbose)
 
     # List all QA crids
     if args.list_crids:
@@ -70,9 +70,10 @@ def command_line_runner(argv=None):
 
         print(f'Using: {crid}')
         if play(crid, env=args.env):
-            print('OK')
+            print('Playable')
             return
         else:
+            print('Not playable')
             return 1
 
 

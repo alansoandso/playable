@@ -1,28 +1,20 @@
 class Verbose(object):
-    __state = False
+    __level = 0
 
-    def status(self):
-        return Verbose.__state
+    def level(self):
+        return Verbose.__level
 
-    def set(self):
-        Verbose.__state = True
+    def set(self, level=1):
+        Verbose.__level = level
 
     def unset(self):
-        Verbose.__state = False
+        Verbose.__level = 0
 
-    def output(self, string, **kwargs):
-        if Verbose.__state:
+    def output(self, string, verbosity=0, **kwargs):
+        """
+        Default message verbosity is 0 and level is 0 so output is suppressed
+        until level is set to 1 or above
+        """
+        if verbosity < Verbose.__level:
             print(string, **kwargs)
 
-
-if __name__ == '__main__':
-    # Verbose().set()
-    # w = Verbose()
-    # w.unset()
-
-    if Verbose().status():
-        print('True')
-        Verbose().output('show when true')
-    else:
-        print('False')
-        Verbose().output('Error show when false')

@@ -1,15 +1,14 @@
 import requests
-from pprint import pformat
 from tool.verbose import Verbose
 from tool.usernames import Usernames
-from tool.utils import session, in_atom, AsJson, highlight
+from tool.utils import session, in_atom, AsJson, highlight, pformat
 
 
 def get_umv():
     users = Usernames
     scratchy = users.get('scratch_tester')
     umv = session(scratchy)
-    # print(umv)
+    Verbose().output('Using user: scratch_tester', verbosity=1)
     return umv
 
 
@@ -24,11 +23,12 @@ def playout(umv, crid, env='quality'):
 
     Verbose().output(f'Request: {url}')
     response = requests.get(url, headers=headers, timeout=5)
+    Verbose().output(f'Returned: {response.status_code}')
 
     if response.status_code == 200:
-        Verbose().output(pformat(response.json()))
+        Verbose().output(f'{pformat(response.json())}', verbosity=1)
         return True
-    Verbose().output(f'{response.status_code}: {response.json()}')
+    Verbose().output(f'{pformat(response.json())}')
     return False
 
 

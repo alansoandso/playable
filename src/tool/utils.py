@@ -64,6 +64,7 @@ def in_atom(crid):
 
     response = requests.get(url, headers=headers, timeout=5)
     Verbose().output(f'Atom lookup request: {url}\nReturned: {response.status_code}')
+    Verbose().output(f'{pformat(response.json())}', verbosity=1)
     if response.status_code == 200:
         return True
 

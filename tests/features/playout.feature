@@ -8,7 +8,7 @@ Feature: Playout an asset
     Then exit status is OK
 
   Scenario: Play by title on integration environment
-    Given I playout "-v --env integration The Firm"
+    Given I playout "-v 1 --env integration The Firm"
     Then output contains "playout.integration.nowtv.bskyb.com"
 
   Scenario: Play by crid
