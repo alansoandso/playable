@@ -12,7 +12,7 @@ Feature: Playout an asset
     Then output contains "playout.integration.nowtv.bskyb.com"
 
   Scenario: Play by crid
-    Given I playout "3e1589785251a510VgnVCM1000000b43150a____"
+    Given I playout "458431384f556510VgnVCM1000000b43150a____"
     Then exit status is OK
 
   Scenario: Play unknown title - fails

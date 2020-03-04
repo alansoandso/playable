@@ -40,7 +40,7 @@ def test_clr_play_title(mock_play, mock_get_crid):
 @patch('tool.playable.play')
 def test_clr_play_title_2_crid(mock_play):
     playable.command_line_runner('playable The Firm'.split())
-    mock_play.assert_called_with('3e1589785251a510VgnVCM1000000b43150a____', env='quality')
+    mock_play.assert_called_with('458431384f556510VgnVCM1000000b43150a____', env='quality')
 
 
 @patch('tool.playable.play')
@@ -52,6 +52,6 @@ def test_clr_play_crid(mock_play):
 @patch('tool.playable.play')
 def test_clr_play_in_integration_title_2_crid(mock_play):
     playable.command_line_runner('playable --env integration The Firm'.split())
-    mock_play.assert_called_with('3e1589785251a510VgnVCM1000000b43150a____', env='integration')
+    mock_play.assert_called_with('458431384f556510VgnVCM1000000b43150a____', env='integration')
 
 
