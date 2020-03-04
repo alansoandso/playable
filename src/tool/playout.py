@@ -1,7 +1,7 @@
 import requests
 from tool.verbose import Verbose
 from tool.usernames import Usernames
-from tool.utils import session, in_atom, AsJson, highlight, pformat
+from tool.utils import session, in_atom, AsJson, highlight, pprint, pformat
 
 
 def get_umv():
@@ -33,6 +33,8 @@ def playout(umv, crid, env='quality'):
 
 
 def catalogue_movies(certificate='', env='quality'):
+    """Test playability of every movie in the catalogue
+    """
     url = f'http://client.{env}.nowtv.bskyb.com/catalogue/programs?limit=20&offset='
     umv = get_umv()
 
@@ -58,6 +60,21 @@ def catalogue_movies(certificate='', env='quality'):
         else:
             print('No data')
             return
+
+
+def catalogue_content(crid='', env='quality'):
+    """Retrieve crid from the catalogue
+    """
+    url = f'http://client.{env}.nowtv.bskyb.com/catalogue/content?id={crid}'
+    headers = {'cache-control': 'no-cache'}
+
+    print(url)
+    response = requests.request('GET', url, headers=headers)
+    pprint(response.json())
+
+    if response.status_code == 200:
+        return True
+    return False
 
 
 def end_date(details):

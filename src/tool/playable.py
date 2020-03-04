@@ -6,7 +6,7 @@ import sys
 
 from tool.usernames import Usernames
 from tool.assets import Assets
-from tool.playout import play, catalogue_movies, catalogue_collections
+from tool.playout import play, catalogue_movies, catalogue_collections, catalogue_content
 from tool.verbose import Verbose
 
 users = Usernames()
@@ -19,6 +19,7 @@ logging.basicConfig(level=logging.INFO, format='%(message)s')
 def get_parser():
     parser = argparse.ArgumentParser(description='Playout tool')
     parser.add_argument('--collections', action='store_true', default=False, help='Find collections in the catalogue')
+    parser.add_argument('--crid', action='store', default='', help='Show crid details from the catalogue')
     parser.add_argument('--movies', action='store_true', default=False, help='Find playable movies in the catalogue')
     parser.add_argument('--with_cert', action='store', default='', help='Filter on certificate')
     parser.add_argument('--env', action='store', default='quality', help='Set for (integration or production)')
@@ -42,6 +43,11 @@ def command_line_runner(argv=None):
 
     if args.verbose:
         Verbose().set(level=args.verbose)
+
+    # Show crid details
+    if args.crid:
+        catalogue_content(args.crid, args.env)
+        return
 
     # List all QA crids
     if args.list_crids:
