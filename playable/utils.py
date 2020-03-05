@@ -1,7 +1,7 @@
 import requests
 import json
 from pretty_json import format_json
-from tool.verbose import Verbose
+from playable.verbose import Verbose
 
 
 class AsJson(dict):

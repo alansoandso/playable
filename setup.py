@@ -14,15 +14,13 @@ install_requires = [
 ]
 
 setup(name='playable',
-      version='1.0',
+      version='1.1',
       description='Playout assets tool',
       author='Alan So',
       author_email='alansoandso@gmail.com',
-      packages=find_packages('src'),
-      package_dir={'': 'src'},
-      py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
+      packages=['playable'],
       include_package_data=True,
-      entry_points={'console_scripts': ['playable = tool.playable:command_line_runner', ]},
+      entry_points={'console_scripts': ['playable = playable.tool:command_line_runner', ]},
       install_requires=install_requires
       )
 

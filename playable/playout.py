@@ -1,7 +1,7 @@
 import requests
-from tool.verbose import Verbose
-from tool.usernames import Usernames
-from tool.utils import session, in_atom, AsJson, highlight, pprint, pformat
+from playable.verbose import Verbose
+from playable.usernames import Usernames
+from playable.utils import session, in_atom, AsJson, highlight, pprint, pformat
 
 
 def get_umv():

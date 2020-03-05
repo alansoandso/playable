@@ -1,7 +1,7 @@
 import pytest
 from pytest_bdd import scenario, given, then, parsers
 
-from tool import playable
+from playable import tool
 
 
 # Generate the following test stubs with:
@@ -41,13 +41,13 @@ def cli():
 
 @given(parsers.parse('I playout "{asset}"'), target_fixture='cli')
 def playout(asset, capsys):
-    status = playable.command_line_runner(f'playable {asset}'.split())
+    status = tool.command_line_runner(f'playable {asset}'.split())
     return dict(status=status)
 
 
 @given('I list all available QA crids', target_fixture='cli')
 def list_all_crids(capsys):
-    status = playable.command_line_runner(f'playable --list_crids'.split())
+    status = tool.command_line_runner(f'playable --list_crids'.split())
     return dict(status=status)
 
 

@@ -1,5 +1,5 @@
 from unittest.mock import patch, mock_open
-from tool.verbose import Verbose
+from playable.verbose import Verbose
 import logging
 LOGGER = logging.getLogger(__name__)
 

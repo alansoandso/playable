@@ -1,5 +1,5 @@
 from unittest.mock import patch, mock_open
-from tool.assets import Assets
+from playable.assets import Assets
 import logging
 LOGGER = logging.getLogger(__name__)
 

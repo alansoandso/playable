@@ -4,10 +4,10 @@ import argparse
 import logging
 import sys
 
-from tool.usernames import Usernames
-from tool.assets import Assets
-from tool.playout import play, catalogue_movies, catalogue_collections, catalogue_content
-from tool.verbose import Verbose
+from playable.usernames import Usernames
+from playable.assets import Assets
+from playable.playout import play, catalogue_movies, catalogue_collections, catalogue_content
+from playable.verbose import Verbose
 
 users = Usernames()
 assets = Assets()
